@@ -1,0 +1,79 @@
+﻿using System;
+
+using NHibernate;
+using NHibernate.Cfg;
+using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
+using NHibernate.Tool.hbm2ddl;
+
+namespace PageOfBob.Comparison.NH {
+	public class SessionFactory {
+		private static object _lock = new object();
+		private static Configuration _config;
+
+		public enum Strategy {
+			TablePerHierachy,
+			TablePerType,
+			TablePerConcreteClass
+		}
+
+		/// <summary>
+		/// Gives a reference to the one ISessionFactory in this application.
+		/// </summary>
+		public static ISessionFactory Get(Strategy strat) {
+			var config =
+				MsSqlConfiguration.MsSql2008
+				.ConnectionString(e => e.FromConnectionStringWithKey("ConnectionString"))
+				.ShowSql();
+
+			Action<MappingConfiguration> mapping;
+			switch (strat) {
+				case Strategy.TablePerHierachy:
+					mapping = AddTablePerHierarchyMappings;
+					break;
+				case Strategy.TablePerType:
+					mapping = AddTablePerTypeMappings;
+					break;
+				case Strategy.TablePerConcreteClass:
+					mapping = AddTablePerConcreteClassMappings;
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+
+			return Fluently.Configure()
+				.Database(config)
+				.ExposeConfiguration(x => _config = x)
+				.Mappings(mapping)
+				.BuildSessionFactory();
+		}
+
+		private static void AddTablePerHierarchyMappings(MappingConfiguration conf) {
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerHierachy.BaseObjectMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerHierachy.UserMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerHierachy.ThingMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerHierachy.EventMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerHierachy.WorkMapping>();
+		}
+
+		private static void AddTablePerTypeMappings(MappingConfiguration conf) {
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerType.BaseObjectMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerType.UserMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerType.ThingMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerType.EventMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerType.WorkMapping>();
+		}
+
+		private static void AddTablePerConcreteClassMappings(MappingConfiguration conf) {
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerConcreteClass.UserMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerConcreteClass.ThingMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerConcreteClass.EventMapping>();
+			conf.FluentMappings.Add<PageOfBob.Comparison.NH.Mapping.TablePerConcreteClass.WorkMapping>();
+		}
+
+		public static void ExportSchema(ISessionFactory factory) {
+			var schema = new SchemaExport(_config);
+			schema.Create(true, true);
+		}
+	}
+}
