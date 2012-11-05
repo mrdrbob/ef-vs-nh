@@ -24,11 +24,11 @@ Concurrency:
 	* None
 		* OptimisticLock.None(); or leave blank
 	* Optimistic - When issuing a request, include either changed fields, or all fields in UPDATE statement.
-		* OptimisticLock.Dirty();
-		* OptimisticLock.All();
+		* OptimisticLock.Dirty(); - Adds WHERE clause including only changed fields
+		* OptimisticLock.All(); - Adds WHERE clause including all fields.
 		* Requires DynamicUpdate
 	* Versioned - Specify a version column and NH will check that in the UPDATE statement.
-		* OptimisticLock.Version();
+		* OptimisticLock.Version(); - Adds WHERE clause w/ Version field.
 	* Pessimistic - Use DB capabilities for transactions / row locking.  If conflict, wait for timeout.
 
 NHibernate DynamicUpdate:
