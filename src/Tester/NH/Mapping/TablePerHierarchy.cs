@@ -8,9 +8,12 @@ namespace PageOfBob.Comparison.NH.Mapping.TablePerHierachy {
 			Id(x => x.ID)
 				.GeneratedBy.GuidComb();
 
-			Map(x => x.Created);
-			Map(x => x.Modified);
-			Map(x => x.Deleted);
+			Map(x => x.Created)
+				.Not.Nullable();
+			Map(x => x.Modified)
+				.Nullable();
+			Map(x => x.Deleted)
+				.Not.Nullable();
 
 			DiscriminateSubClassesOnColumn("ClassType");
 		}
@@ -20,36 +23,51 @@ namespace PageOfBob.Comparison.NH.Mapping.TablePerHierachy {
 		public UserMapping() {
 			DiscriminatorValue("User");
 
-			Map(x => x.Username);
-			Map(x => x.Salt);
-			Map(x => x.Hash);
+			Map(x => x.Username)
+				.Length(64);
+			Map(x => x.Salt)
+				.Length(32);
+			Map(x => x.Hash)
+				.Length(32);
 
 			HasMany(x => x.Things)
 				.Cascade.AllDeleteOrphan()
-				.AsSet();
+				.AsSet()
+				.ForeignKeyConstraintName("FK_User_Things");
 		}
 	}
 
 	public class ThingMapping : SubclassMap<Thing> {
 		public ThingMapping() {
 			DiscriminatorValue("Thing");
-			Map(x => x.Name);
+			
+			Map(x => x.Name)
+				.Length(256);
 
-			References(x => x.Owner);
+			References(x => x.Owner)
+				.ForeignKey("FK_Thing_Owner");
 
 			HasMany(x => x.Events)
 				.Cascade.AllDeleteOrphan()
-				.AsSet();
+				.AsSet()
+				.ForeignKeyConstraintName("FK_Thing_User");
 		}
 	}
 
 	public class EventMapping : SubclassMap<Event> {
 		public EventMapping() {
 			DiscriminatorValue("Event");
-			Map(x => x.Name);
+			
+			Map(x => x.Name)
+				.Length(256);
+			
 			Map(x => x.Date);
-			Map(x => x.Counter);
-			References(x => x.Thing);
+			
+			Map(x => x.Counter)
+				.Nullable();
+			
+			References(x => x.Thing)
+				.ForeignKey("FK_Event_Thing");
 
 			HasManyToMany(x => x.WorkDone)
 				.AsSet()
@@ -61,13 +79,20 @@ namespace PageOfBob.Comparison.NH.Mapping.TablePerHierachy {
 	public class WorkMapping : SubclassMap<Work> {
 		public WorkMapping() {
 			DiscriminatorValue("Work");
-			Map(x => x.Name);
-			Map(x => x.EveryCounter);
-			Map(x => x.EveryDays);
+			
+			Map(x => x.Name)
+				.Length(256);
+			
+			Map(x => x.EveryCounter)
+				.Nullable();
+			Map(x => x.EveryDays)
+				.Nullable();
 
 			HasManyToMany(x => x.Instances)
 				.AsSet()
-				.Cascade.AllDeleteOrphan();
+				.Cascade.AllDeleteOrphan()
+				.Table("WorkInstance")
+				.ForeignKeyConstraintNames("FK_Work_Instanace", "FK_Instance_Work");
 		}
 	}
 }

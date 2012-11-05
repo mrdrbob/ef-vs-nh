@@ -22,8 +22,9 @@ namespace PageOfBob.Comparison {
 			}
 			Console.WriteLine("   [OK]");
 
-			var factory = NH.SessionFactory.Get(NH.SessionFactory.Strategy.TablePerConcreteClass);
-
+			NH.SessionFactory.Locking = NH.SessionFactory.LockingStrategy.OptimisticVersionInteger;
+			var factory = NH.SessionFactory.Get(NH.SessionFactory.InheritenceStrategy.TablePerConcreteClass);
+			
 			Console.Write("ExportSchema");
 			NH.SessionFactory.ExportSchema(factory);
 			Console.WriteLine("   [OK]");
@@ -39,12 +40,14 @@ namespace PageOfBob.Comparison {
 			Console.WriteLine("  [OK]");
 			Console.ReadKey();
 
+			Guid theToyota;
 			using (var session = factory.OpenSession()) {
 				Console.WriteLine("Query for Bob");
 				User bob = new NH.Query.UserQuery { 
 					Username = "Bob",
 					// JoinWork = true
 				}.FirstOrDefault(session);
+				
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();
 
@@ -58,6 +61,8 @@ namespace PageOfBob.Comparison {
 						}
 					}
 				}
+				
+				theToyota = bob.Things.First().ID;
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();
 			}
@@ -75,8 +80,21 @@ namespace PageOfBob.Comparison {
 				foreach (var t in list) {
 					Console.WriteLine("{0} {1} {2} {3} {4} {5}", t.UserName, t.ThingName, t.EventName, t.Date, t.Counter, t.WorkDone);
 				}
+				
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();
+			}
+
+			using (var session = factory.OpenSession()) {
+				// using(var trans = session.BeginTransaction()) {
+					var toyota = session.Get<Thing>(theToyota);
+					toyota.Name = "2012 Toyota Camery";
+					toyota.Modified = DateTime.Now;
+					
+					Console.WriteLine("Update some work");
+					// trans.Commit();
+					session.Flush();
+				// }
 			}
 
 			
@@ -86,7 +104,11 @@ namespace PageOfBob.Comparison {
 		}
 
 		static User CreateBob() {
-			User bob = new User { Username = "Bob" };
+			User bob = new User {
+				Username = "Bob",
+				Hash = new Byte[] { 0, 1, 2, 3, 4, 5 },
+				Salt = new Byte[] { 6, 7, 8, 9, 10, 0xA }
+			};
 			Thing camery;
 			bob.Things.Add(camery = new Thing {
 				Owner = bob,

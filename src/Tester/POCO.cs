@@ -7,6 +7,8 @@ namespace PageOfBob.Comparison {
 		public virtual bool Deleted { get; set; }
 		public virtual DateTime Created { get; set; }
 		public virtual DateTime? Modified { get; set; }
+		public virtual byte[] TimeStamp { get; set; }
+		public virtual int Version { get; set; }
 
 		protected BaseObject() { Created = DateTime.Now; }
 	}
