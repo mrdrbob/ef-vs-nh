@@ -3,10 +3,45 @@ Entity Framework Vs NHibernate
 
 An NHibernate guy's journey into the Entity Framework World.
 
-Random Notes
-===========
+Outline
+=======
 
-To be organized later:
+Let's talk about you:
+
+* Who's used ORM
+	* EF?
+	* NH?
+	* Code-first?
+
+Ego:
+
+* Me: Bob Davidson
+* Professional .NET developer since 2004.
+	* Couple years of ColdFusion, which I've been trying to scrub from my memory so please stop bringing it up.
+* Currently a developer at Blend Interactive, since Aug '12.
+* Long(ish) time NHibnerate user
+
+The Project:
+
+* "Thing" maintenance app
+* POCOs - BaseItem, Thing, User, etc.
+
+Mapping:
+
+* Both: Fluent, Data Annotations, Automap.
+	* Fluent - Control, separation of concerns, manual work.
+	* Annotations - Control, less work, decorates your POCO with DB concerns.
+	* Automap - Easy, but defaults to nvarchar(max)
+* NHibernate: XML
+	* Very similar to Hibernate, bracket tax.
+* Entity Framework: XML w/ VS designer.
+	* Visual designer, seriously?
+* NHibernate requires properties be marked virtual.
+* NHibernate uses Hibernate collections
+	* Set - Distinct elements, no order - HashSet (ICollection)
+	* Bag - Elements, no order - IList
+	* Map - IDictionary
+	* List - IList - Elements, order
 
 Inheritance Types:
 
@@ -38,5 +73,6 @@ NHibernate DynamicUpdate:
 
 Query Patterns
 
+* Both - LINQ
 * NHibnerate - QueryOver<T, T>;
 
