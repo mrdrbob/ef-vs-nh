@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 using NHibernate.Transform;
 
 namespace PageOfBob.Comparison.NH.Query {
-	public class UserQuery : Query<User> {
-		public string Username { get; set; }
-		public bool JoinThings { get; set; }
-		public bool JoinEvents { get; set; }
-		public bool JoinWork { get; set; }
+	public class UserQuery : Query<User, UserCriteria> {
 
+		public UserQuery(UserCriteria criteria) : base(criteria) { }
+		
 		protected Thing _thingAlias;
 		protected Event _eventAlias;
 		protected Work _workAlias;
@@ -20,23 +18,23 @@ namespace PageOfBob.Comparison.NH.Query {
 		public override NHibernate.Criterion.QueryOver<User, User> GetQuery() {
 			var q = base.GetQuery();
 
-			if (!string.IsNullOrEmpty(Username))
-				q = q.And(x => x.Username == Username);
+			if (!string.IsNullOrEmpty(Criteria.Username))
+				q = q.And(x => x.Username == Criteria.Username);
 
-			if (JoinThings || JoinEvents || JoinWork) {
+			if (Criteria.JoinThings || Criteria.JoinEvents || Criteria.JoinWork) {
 				q = q.JoinAlias(() => _alias.Things, () => _thingAlias);
 			}
-			if (JoinEvents || JoinWork) {
+			if (Criteria.JoinEvents || Criteria.JoinWork) {
 				q = q.JoinAlias(() => _thingAlias.Events, () => _eventAlias);
 			}
-			if (JoinWork) {
+			if (Criteria.JoinWork) {
 				q = q.JoinAlias(() => _eventAlias.WorkDone, () => _workAlias);
 			}
 			return q;
 		}
 
 		public IList<FlatView> Flatten(NHibernate.ISession session) {
-			JoinWork = true;
+			Criteria.JoinWork = true;
 
 			var q = GetQuery();
 

@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Criteria.cs" />
     <Compile Include="NH\Mapping\TablePerConcreteClass.cs" />
     <Compile Include="NH\Mapping\TablePerHierarchy.cs" />
     <Compile Include="NH\Mapping\TablePerType.cs" />
@@ -86,6 +87,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="EF" />
     <Folder Include="NH" />
     <Folder Include="NH\Mapping" />
     <Folder Include="NH\Query" />

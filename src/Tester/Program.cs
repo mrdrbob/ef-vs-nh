@@ -43,10 +43,10 @@ namespace PageOfBob.Comparison {
 			Guid theToyota;
 			using (var session = factory.OpenSession()) {
 				Console.WriteLine("Query for Bob");
-				User bob = new NH.Query.UserQuery { 
+				User bob = new NH.Query.UserQuery(new UserCriteria {
 					Username = "Bob",
 					// JoinWork = true
-				}.FirstOrDefault(session);
+				}).FirstOrDefault(session);
 				
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();
@@ -69,9 +69,9 @@ namespace PageOfBob.Comparison {
 
 			using (var session = factory.OpenSession()) {
 				Console.WriteLine("Query for Bob, joining everything");
-				var list = new NH.Query.UserQuery {
+				var list = new NH.Query.UserQuery(new UserCriteria {
 					Username = "Bob"
-				}.Flatten(session);
+				}).Flatten(session);
 
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();

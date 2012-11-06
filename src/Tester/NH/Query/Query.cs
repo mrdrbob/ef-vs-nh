@@ -4,25 +4,25 @@ using System.Collections.Generic;
 using NHibernate.Criterion;
 
 namespace PageOfBob.Comparison.NH.Query {
-	public class Query<T> where T : BaseObject {
-		public Guid? ID { get; set; }
-		public int? Take { get; set; }
-		public bool? Deleted { get; set; }
-
-		public Query() { Deleted = false; }
+	public class Query<T, K> where T : BaseObject where K : Criteria {
+		public K Criteria { get; private set; }
+		
+		public Query(K criteria) {
+			this.Criteria = criteria;
+		}
 
 		protected T _alias;
 		public virtual QueryOver<T, T> GetQuery() {
 			var q = QueryOver.Of<T>(() => _alias);
 
-			if (ID.HasValue)
-				q.And(() => _alias.ID == ID.Value);
+			if (Criteria.ID.HasValue)
+				q.And(() => _alias.ID == Criteria.ID.Value);
 
-			if (Deleted.HasValue)
-				q.And(() => _alias.Deleted == Deleted.Value);
+			if (Criteria.Deleted.HasValue)
+				q.And(() => _alias.Deleted == Criteria.Deleted.Value);
 
-			if (Take.HasValue)
-				q.Take(Take.Value);
+			if (Criteria.Take.HasValue)
+				q.Take(Criteria.Take.Value);
 
 			return q;
 		}
@@ -34,7 +34,7 @@ namespace PageOfBob.Comparison.NH.Query {
 		}
 
 		public T FirstOrDefault(NHibernate.ISession session) {
-			Take = 1;
+			Criteria.Take = 1;
 
 			var list = GetQuery()
 				.GetExecutableQueryOver(session)
