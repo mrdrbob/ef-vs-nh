@@ -11,6 +11,7 @@ Let's talk about you:
 * Who's used ORM
 	* EF?
 	* NH?
+	* LINQ2SQL?
 	* Code-first?
 
 Ego:
@@ -42,6 +43,8 @@ Mapping:
 	* Bag - Elements, no order - IList
 	* Map - IDictionary
 	* List - IList - Elements, order
+* Guid Identifiers
+	* Guid.Comb - Sequential GUIDs to reduce index fragmentation
 
 Inheritance Types:
 

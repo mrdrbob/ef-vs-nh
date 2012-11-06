@@ -8,11 +8,17 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
+		NHibernate|x86 = NHibernate|x86
+		EntityFramework|x86 = EntityFramework|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{58FB3F67-606C-4B98-83A5-A5692698E515}.Debug|x86.Build.0 = Debug|x86
 		{58FB3F67-606C-4B98-83A5-A5692698E515}.Debug|x86.ActiveCfg = Debug|x86
 		{58FB3F67-606C-4B98-83A5-A5692698E515}.Release|x86.Build.0 = Release|x86
 		{58FB3F67-606C-4B98-83A5-A5692698E515}.Release|x86.ActiveCfg = Release|x86
+		{58FB3F67-606C-4B98-83A5-A5692698E515}.NHibernate|x86.Build.0 = Debug|x86
+		{58FB3F67-606C-4B98-83A5-A5692698E515}.NHibernate|x86.ActiveCfg = NHibernate|x86
+		{58FB3F67-606C-4B98-83A5-A5692698E515}.EntityFramework|x86.Build.0 = Debug|x86
+		{58FB3F67-606C-4B98-83A5-A5692698E515}.EntityFramework|x86.ActiveCfg = EntityFramework|x86
 	EndGlobalSection
 EndGlobal

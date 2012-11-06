@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using NHibernate.Transform;
 
 namespace PageOfBob.Comparison.NH.Query {
-	public class UserQuery : Query<User, UserCriteria> {
+	public class UserQuery : Query<User, UserCriteria>, IUserQuery {
 
-		public UserQuery(UserCriteria criteria) : base(criteria) { }
+		public UserQuery(UserCriteria criteria, NHibernate.ISession session) : base(criteria, session) { }
 		
 		protected Thing _thingAlias;
 		protected Event _eventAlias;
@@ -33,7 +33,7 @@ namespace PageOfBob.Comparison.NH.Query {
 			return q;
 		}
 
-		public IList<FlatView> Flatten(NHibernate.ISession session) {
+		public IList<FlatView> Flatten() {
 			Criteria.JoinWork = true;
 
 			var q = GetQuery();
@@ -49,7 +49,7 @@ namespace PageOfBob.Comparison.NH.Query {
 			);
 
 			return q.TransformUsing(Transformers.AliasToBean<FlatView>())
-				.GetExecutableQueryOver(session)
+				.GetExecutableQueryOver(Session)
 				.List<FlatView>();
 		}
 	}

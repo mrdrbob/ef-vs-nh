@@ -6,9 +6,11 @@ using NHibernate.Criterion;
 namespace PageOfBob.Comparison.NH.Query {
 	public class Query<T, K> where T : BaseObject where K : Criteria {
 		public K Criteria { get; private set; }
+		protected NHibernate.ISession Session { get; private set; }
 		
-		public Query(K criteria) {
+		public Query(K criteria, NHibernate.ISession session) {
 			this.Criteria = criteria;
+			this.Session = session;
 		}
 
 		protected T _alias;
@@ -27,17 +29,17 @@ namespace PageOfBob.Comparison.NH.Query {
 			return q;
 		}
 
-		public IList<T> ToList(NHibernate.ISession session) {
+		public IList<T> ToList() {
 			return GetQuery()
-				.GetExecutableQueryOver(session)
+				.GetExecutableQueryOver(Session)
 				.List<T>();
 		}
 
-		public T FirstOrDefault(NHibernate.ISession session) {
+		public T FirstOrDefault() {
 			Criteria.Take = 1;
 
 			var list = GetQuery()
-				.GetExecutableQueryOver(session)
+				.GetExecutableQueryOver(Session)
 				.List<T>();
 
 			if (list.Count == 0)
@@ -46,15 +48,15 @@ namespace PageOfBob.Comparison.NH.Query {
 			return list[0];
 		}
 
-		public int Count(NHibernate.ISession session) {
+		public int Count() {
 			return GetQuery()
 				.Select(Projections.RowCount())
-				.GetExecutableQueryOver(session)
+				.GetExecutableQueryOver(Session)
 				.SingleOrDefault<int>();
 		}
 
-		public bool Any(NHibernate.ISession session) {
-			return Count(session) > 0;
+		public bool Any() {
+			return Count() > 0;
 		}
 	}
 }

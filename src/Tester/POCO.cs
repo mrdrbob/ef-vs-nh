@@ -10,7 +10,15 @@ namespace PageOfBob.Comparison {
 		public virtual byte[] TimeStamp { get; set; }
 		public virtual int Version { get; set; }
 
-		protected BaseObject() { Created = DateTime.Now; }
+		protected BaseObject() {
+			Created = DateTime.Now;
+			
+			// In NH, you DON'T assign an idea, but let
+			// NH assign one for you.  NH expects this to be an 
+			// empty GUID, which is what NewGuid() will do in a 
+			// NH setting.
+			ID = DbFactory.NewGuid();
+		}
 	}
 
 	public class User : BaseObject {

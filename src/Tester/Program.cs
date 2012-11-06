@@ -21,32 +21,44 @@ namespace PageOfBob.Comparison {
 				conn.Close();
 			}
 			Console.WriteLine("   [OK]");
-
+			
+			
+			#if ENTITY
+			DbFactory.GetDatabaseFunc = () => {
+				return new EF.EfDatabase(new EF.EfContext());
+			};
+			DbFactory.NewIdFunc = Guid.NewGuid;
+			#endif
+			
+			#if NHIBERNATE
 			NH.SessionFactory.Locking = NH.SessionFactory.LockingStrategy.OptimisticVersionInteger;
 			var factory = NH.SessionFactory.Get(NH.SessionFactory.InheritenceStrategy.TablePerConcreteClass);
+			DbFactory.GetDatabaseFunc = () => {
+				return new NH.NHibernateDatabase(factory);
+			};
+			DbFactory.NewIdFunc = () => { return default(Guid); }
 			
 			Console.Write("ExportSchema");
 			NH.SessionFactory.ExportSchema(factory);
 			Console.WriteLine("   [OK]");
+			#endif
 
 			Console.WriteLine("Create Bob");
-			using (var session = factory.OpenSession()) {
+			using (var session = DbFactory.GetDatabase()) {
 				User bob = CreateBob();
 
-				session.Save(bob);
-				session.Flush();
+				session.Insert(bob);
 			}
 
 			Console.WriteLine("  [OK]");
 			Console.ReadKey();
 
 			Guid theToyota;
-			using (var session = factory.OpenSession()) {
+			using (var session = DbFactory.GetDatabase()) {
 				Console.WriteLine("Query for Bob");
-				User bob = new NH.Query.UserQuery(new UserCriteria {
-					Username = "Bob",
-					// JoinWork = true
-				}).FirstOrDefault(session);
+				User bob = session.GetUserQuery(new UserCriteria {
+					Username = "Bob"
+				}).FirstOrDefault();
 				
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();
@@ -67,11 +79,11 @@ namespace PageOfBob.Comparison {
 				Console.ReadKey();
 			}
 
-			using (var session = factory.OpenSession()) {
+			using (var session = DbFactory.GetDatabase()) {
 				Console.WriteLine("Query for Bob, joining everything");
-				var list = new NH.Query.UserQuery(new UserCriteria {
+				var list = session.GetUserQuery(new UserCriteria {
 					Username = "Bob"
-				}).Flatten(session);
+				}).Flatten();
 
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();
@@ -85,16 +97,13 @@ namespace PageOfBob.Comparison {
 				Console.ReadKey();
 			}
 
-			using (var session = factory.OpenSession()) {
-				// using(var trans = session.BeginTransaction()) {
-					var toyota = session.Get<Thing>(theToyota);
-					toyota.Name = "2012 Toyota Camery";
-					toyota.Modified = DateTime.Now;
-					
-					Console.WriteLine("Update some work");
-					// trans.Commit();
-					session.Flush();
-				// }
+			using (var session = DbFactory.GetDatabase()) {
+				var toyota = session.Get<Thing>(theToyota);
+				toyota.Name = "2012 Toyota Camery";
+				toyota.Modified = DateTime.Now;
+				
+				Console.WriteLine("Update some work");
+				session.FlushChanges();
 			}
 
 			

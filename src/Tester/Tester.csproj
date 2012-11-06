@@ -21,7 +21,7 @@
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -32,14 +32,34 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <BaseAddress>4194304</BaseAddress>
-    <PlatformTarget>x86</PlatformTarget>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>x86</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'NHibernate' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE;NHIBERNATE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'EntityFramework' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE;ENTITY</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -72,9 +92,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Criteria.cs" />
+    <Compile Include="DbAbstraction.cs" />
+    <Compile Include="EF\EfContext.cs" />
+    <Compile Include="EF\EfDatabase.cs" />
+    <Compile Include="EF\Mapping\TablePerConcreteClass.cs" />
     <Compile Include="NH\Mapping\TablePerConcreteClass.cs" />
     <Compile Include="NH\Mapping\TablePerHierarchy.cs" />
     <Compile Include="NH\Mapping\TablePerType.cs" />
+    <Compile Include="NH\NHibernateDatabase.cs" />
     <Compile Include="NH\Query\Query.cs" />
     <Compile Include="NH\Query\UserQuery.cs" />
     <Compile Include="NH\SessionFactory.cs" />
@@ -88,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EF" />
+    <Folder Include="EF\Mapping" />
     <Folder Include="NH" />
     <Folder Include="NH\Mapping" />
     <Folder Include="NH\Query" />
