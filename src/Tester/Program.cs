@@ -23,23 +23,10 @@ namespace PageOfBob.Comparison {
 			Console.WriteLine("   [OK]");
 			
 			
-			#if ENTITY
-			DbFactory.GetDatabaseFunc = () => {
-				return new EF.EfDatabase(new EF.EfContext());
-			};
-			DbFactory.NewIdFunc = Guid.NewGuid;
-			#endif
-			
 			#if NHIBERNATE
 			NH.SessionFactory.Locking = NH.SessionFactory.LockingStrategy.OptimisticVersionInteger;
-			var factory = NH.SessionFactory.Get(NH.SessionFactory.InheritenceStrategy.TablePerConcreteClass);
-			DbFactory.GetDatabaseFunc = () => {
-				return new NH.NHibernateDatabase(factory);
-			};
-			DbFactory.NewIdFunc = () => { return default(Guid); }
-			
 			Console.Write("ExportSchema");
-			NH.SessionFactory.ExportSchema(factory);
+			NH.SessionFactory.ExportSchema(DbFactory.Factory);
 			Console.WriteLine("   [OK]");
 			#endif
 
@@ -140,20 +127,6 @@ namespace PageOfBob.Comparison {
 			})
 			.HadWorkDown(changeOil)
 			.HadWorkDown(changeAlternator);
-
-			/*
-			Work changeOil = new Work { Name = "Oil Change" };
-			Event oilChanged = new Event {
-				Thing = camery,
-				Name = "Serviced @ Roger's",
-				Counter = 100005,
-				Date = DateTime.Now.Date
-			};
-			camery.Events.Add(oilChanged);
-
-			oilChanged.WorkDone.Add(changeOil);
-			changeOil.Instances.Add(oilChanged);
-			*/
 
 			return bob;
 		}

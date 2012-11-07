@@ -69,6 +69,13 @@ Concurrency:
 	* OptimisticLock.Version(); - Adds WHERE clause w/ Version field.
 * Pessimistic - Use DB capabilities for transactions / row locking.  If conflict, wait for timeout.
 
+Performance Considerations:
+
+* SELECT * by default
+* In NH, using transactions can actually speed up requests.
+	* NH automatically adds transactions around queries
+* Batched queries (Future)
+
 NHibernate DynamicUpdate:
 	
 * With: UPDATE [table] SET [ChangedField] = @value WHERE id = @id;

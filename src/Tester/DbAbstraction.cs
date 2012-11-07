@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using NHibernate;
+
 namespace PageOfBob.Comparison {
 	public interface IDbAbstraction : IDisposable {
 		T Get<T>(Guid id) where T : BaseObject;
@@ -21,15 +23,27 @@ namespace PageOfBob.Comparison {
 	}
 	
 	public static class DbFactory {
-		internal static Func<IDbAbstraction> GetDatabaseFunc;
-		internal static Func<Guid> NewIdFunc;
+		#if NHIBERNATE
+		public static ISessionFactory Factory = NH.SessionFactory.Get(NH.SessionFactory.InheritenceStrategy.TablePerConcreteClass);
+		#endif
 		
 		public static IDbAbstraction GetDatabase() {
-			return GetDatabaseFunc();
+			#if ENTITY
+			return new EF.EfDatabase(new EF.EfContext());
+			#endif
+			
+			#if NHIBERNATE
+			return new NH.NHibernateDatabase(Factory);
+			#endif
 		}
 		
 		public static Guid NewGuid() {
-			return NewIdFunc();
+			#if ENTITY
+			return Guid.NewGuid();
+			#endif
+			#if NHIBERNATE
+			return default(Guid);
+			#endif
 		}
 	}
 }
