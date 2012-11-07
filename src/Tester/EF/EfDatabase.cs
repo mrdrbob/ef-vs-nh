@@ -26,7 +26,7 @@ namespace PageOfBob.Comparison.EF {
 		}
 		
 		public IUserQuery GetUserQuery(UserCriteria criteria) {
-			throw new NotImplementedException();
+			return new Query.UserQuery(criteria, _context);
 		}
 		
 		public void Dispose() {

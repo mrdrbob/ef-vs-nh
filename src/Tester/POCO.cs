@@ -22,21 +22,45 @@ namespace PageOfBob.Comparison {
 	}
 
 	public class User : BaseObject {
-		public User() { Things = new HashSet<Thing>(); }
+		public User() {
+			#if NHIBERNATE
+			Things = new HashSet<Thing>();
+			#endif
+		}
 
 		public virtual string Username { get; set; }
 		public virtual byte[] Salt { get; set; }
 		public virtual byte[] Hash { get; set; }
 
-		public virtual ICollection<Thing> Things { get; protected set; }
+		public virtual ICollection<Thing> Things {
+			get; 
+			#if NHIBERATE
+			protected set; 
+			#endif
+			#if ENTITY
+			set;
+			#endif
+		}
 	}
 
 	public class Thing : BaseObject {
-		public Thing() { Events = new HashSet<Event>(); }
+		public Thing() {
+			#if NHIBERATE
+			Events = new HashSet<Event>();
+			#endif
+		}
 
 		public virtual string Name { get; set; }
 		public virtual User Owner { get; set; }
-		public virtual ICollection<Event> Events { get; protected set; }
+		public virtual ICollection<Event> Events {
+			get;
+			#if NHIBERATE
+			protected set; 
+			#endif
+			#if ENTITY
+			set;
+			#endif
+		}
 
 		public virtual Event Serviced(Event service) {
 			Events.Add(service);
@@ -46,14 +70,26 @@ namespace PageOfBob.Comparison {
 	}
 
 	public class Event : BaseObject {
-		public Event() { WorkDone = new HashSet<Work>(); }
+		public Event() {
+			#if NHIBERNATE
+			WorkDone = new HashSet<Work>();
+			#endif
+		}
 
 		public virtual string Name { get; set; }
 		public virtual DateTime Date { get; set; }
 		public virtual int? Counter { get; set; }
 		public virtual Thing Thing { get; set; }
 
-		public virtual ICollection<Work> WorkDone { get; protected set; }
+		public virtual ICollection<Work> WorkDone {
+			get; 
+			#if NHIBERATE
+			protected set; 
+			#endif
+			#if ENTITY
+			set;
+			#endif
+		}
 
 		public virtual Event HadWorkDown(Work work) {
 			WorkDone.Add(work);
@@ -63,13 +99,25 @@ namespace PageOfBob.Comparison {
 	}
 
 	public class Work : BaseObject {
-		public Work() { Instances = new HashSet<Event>(); }
+		public Work() {
+			#if NHIBERNATE
+			Instances = new HashSet<Event>();
+			#endif
+		}
 
 		public virtual string Name { get; set; }
 		public virtual int? EveryCounter { get; set; }
 		public virtual int? EveryDays { get; set; }
 
-		public virtual ICollection<Event> Instances { get; protected set; }
+		public virtual ICollection<Event> Instances {
+			get;
+			#if NHIBERATE
+			protected set; 
+			#endif
+			#if ENTITY
+			set;
+			#endif
+		}
 	}
 
 	public class FlatView {

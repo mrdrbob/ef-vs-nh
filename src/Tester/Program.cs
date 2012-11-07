@@ -104,19 +104,31 @@ namespace PageOfBob.Comparison {
 				Username = "Bob",
 				Hash = new Byte[] { 0, 1, 2, 3, 4, 5 },
 				Salt = new Byte[] { 6, 7, 8, 9, 10, 0xA }
+				#if ENTITY
+				,Things =new List<Thing>()
+				#endif
 			};
 			Thing camery;
 			bob.Things.Add(camery = new Thing {
 				Owner = bob,
 				Name = "1992 Toyota Camery"
+				#if ENTITY
+				,Events = new List<Event>()
+				#endif
 			});
 
 			Work changeOil = new Work {
 				Name = "Oil Change",
 				EveryCounter = 3000
+				#if ENTITY
+				,Instances = new List<Event>()
+				#endif
 			};
 			Work changeAlternator = new Work {
 				Name = "Alternator Change"
+				#if ENTITY
+				,Instances = new List<Event>()
+				#endif
 			};
 
 			
@@ -124,6 +136,9 @@ namespace PageOfBob.Comparison {
 				Name = "Serviced at Roger's",
 				Date = DateTime.Now.Date,
 				Counter = 100005
+				#if ENTITY
+				,WorkDone = new List<Work>()
+				#endif
 			})
 			.HadWorkDown(changeOil)
 			.HadWorkDown(changeAlternator);

@@ -37,14 +37,19 @@ Mapping:
 	* Very similar to Hibernate, bracket tax.
 * Entity Framework: XML w/ VS designer.
 	* Visual designer, seriously?
+	* Code-first specifying Foreign Key name - Only in code.
 * NHibernate requires properties be marked virtual.
-* NHibernate uses Hibernate collections
-	* Set - Distinct elements, no order - HashSet (ICollection)
-	* Bag - Elements, no order - IList
-	* Map - IDictionary
-	* List - IList - Elements, order
 * Guid Identifiers
 	* Guid.Comb - Sequential GUIDs to reduce index fragmentation
+* Entity Framework has much cleaner / nicer relationship definitions.
+* Collections
+	* NHibernate - Initialize in constructor, public get, protected set
+		* NHibernate uses Hibernate collections
+			* Set - Distinct elements, no order - HashSet (ICollection)
+			* Bag - Elements, no order - IList
+			* Map - IDictionary
+			* List - IList - Elements, order
+	* Entity Framework - Do not initialize in constructor, public get, set to allow detached entities to create lists.
 
 Inheritance Types:
 
