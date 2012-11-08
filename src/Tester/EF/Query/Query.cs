@@ -38,7 +38,7 @@ namespace PageOfBob.Comparison.EF.Query {
 			
 			if (Criteria.Take.HasValue)
 				results = results.Take(Criteria.Take.Value);
-			
+
 			return results;
 		}
 		

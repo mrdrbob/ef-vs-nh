@@ -24,8 +24,14 @@ Ego:
 
 The Project:
 
+* Available on github: https://github.com/mrdrbob/ef-vs-nh
 * "Thing" maintenance app
-* POCOs - BaseItem, Thing, User, etc.
+	* Thing - Car, House, Cat, etc
+	* Event - Went to service station, hired contractor, vet, etc
+	* Work - Oil change/alternate replacement, roof rebuilt, kitty fluid replaced, etc
+* Delete never, track modifications & creation date on ALL items.
+	* BaseObject - 
+* GUID for ids
 
 Mapping:
 
@@ -88,6 +94,7 @@ NHibernate DynamicUpdate:
 
 Query Patterns
 
-* Both - LINQ
+* Both - LINQ (with varying degrees of support)
 * NHibnerate - QueryOver<T, T>;
+* EntityFramework - ???
 
