@@ -11,12 +11,6 @@ namespace PageOfBob.Comparison.NH {
 		private static object _lock = new object();
 		private static Configuration _config;
 
-		public enum InheritenceStrategy {
-			TablePerHierachy,
-			TablePerType,
-			TablePerConcreteClass
-		}
-		
 		public enum LockingStrategy {
 			OptimisticDirty,
 			OptimisticAll,
@@ -30,14 +24,14 @@ namespace PageOfBob.Comparison.NH {
 		/// <summary>
 		/// Gives a reference to the one ISessionFactory in this application.
 		/// </summary>
-		public static ISessionFactory Get(InheritenceStrategy strat) {
+		public static ISessionFactory Get() {
 			var config =
 				MsSqlConfiguration.MsSql2008
 				.ConnectionString(e => e.FromConnectionStringWithKey("ConnectionString"))
 				.ShowSql();
 
 			Action<MappingConfiguration> mapping;
-			switch (strat) {
+			switch (DbFactory.InheritenceStrategy) {
 				case InheritenceStrategy.TablePerHierachy:
 					mapping = AddTablePerHierarchyMappings;
 					break;

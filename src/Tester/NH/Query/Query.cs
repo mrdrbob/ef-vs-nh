@@ -21,7 +21,7 @@ namespace PageOfBob.Comparison.NH.Query {
 				q.And(() => _alias.ID == Criteria.ID.Value);
 
 			if (Criteria.Deleted.HasValue)
-				q.And(() => _alias.Deleted == Criteria.Deleted.Value);
+				q.And(() => _alias.IsDeleted == Criteria.Deleted.Value);
 
 			if (Criteria.Take.HasValue)
 				q.Take(Criteria.Take.Value);

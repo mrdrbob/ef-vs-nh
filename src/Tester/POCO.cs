@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace PageOfBob.Comparison {
 	public abstract class BaseObject {
 		public virtual Guid ID { get; set; }
-		public virtual bool Deleted { get; set; }
+		public virtual bool IsDeleted { get; set; }
 		public virtual DateTime Created { get; set; }
 		public virtual DateTime? Modified { get; set; }
 		public virtual byte[] TimeStamp { get; set; }
@@ -24,6 +24,16 @@ namespace PageOfBob.Comparison {
 	public class User : BaseObject {
 		public User() {
 			#if NHIBERNATE
+			// W/ NH, you can always assign this value,
+			// but this throws an exception in EF if the object
+			// comes from the DB.  If you make the Things property on this
+			// class non-virtual, you can then assign this in the constructor,
+			// but then objects from the DB lose any value that they had.
+			// For the purposes of this sample, the solution is to make set
+			// public and assume the end-user is going to always intialize
+			// the things collection before use.  A better solution might be
+			// to provide a static method that does this initialization that
+			// users would use, but EF would not.
 			Things = new HashSet<Thing>();
 			#endif
 		}
@@ -34,7 +44,7 @@ namespace PageOfBob.Comparison {
 
 		public virtual ICollection<Thing> Things {
 			get; 
-			#if NHIBERATE
+			#if NHIBERNATE
 			protected set; 
 			#endif
 			#if ENTITY
@@ -45,7 +55,7 @@ namespace PageOfBob.Comparison {
 
 	public class Thing : BaseObject {
 		public Thing() {
-			#if NHIBERATE
+			#if NHIBERNATE
 			Events = new HashSet<Event>();
 			#endif
 		}
@@ -54,7 +64,7 @@ namespace PageOfBob.Comparison {
 		public virtual User Owner { get; set; }
 		public virtual ICollection<Event> Events {
 			get;
-			#if NHIBERATE
+			#if NHIBERNATE
 			protected set; 
 			#endif
 			#if ENTITY
@@ -83,7 +93,7 @@ namespace PageOfBob.Comparison {
 
 		public virtual ICollection<Work> WorkDone {
 			get; 
-			#if NHIBERATE
+			#if NHIBERNATE
 			protected set; 
 			#endif
 			#if ENTITY
@@ -111,7 +121,7 @@ namespace PageOfBob.Comparison {
 
 		public virtual ICollection<Event> Instances {
 			get;
-			#if NHIBERATE
+			#if NHIBERNATE
 			protected set; 
 			#endif
 			#if ENTITY

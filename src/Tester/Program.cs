@@ -22,6 +22,7 @@ namespace PageOfBob.Comparison {
 			}
 			Console.WriteLine("   [OK]");
 			
+			DbFactory.InheritenceStrategy = InheritenceStrategy.TablePerType;
 			
 			#if NHIBERNATE
 			NH.SessionFactory.Locking = NH.SessionFactory.LockingStrategy.OptimisticVersionInteger;
@@ -34,7 +35,15 @@ namespace PageOfBob.Comparison {
 			using (var session = DbFactory.GetDatabase()) {
 				User bob = CreateBob();
 
+				#if ENTITY
+				if (DbFactory.InheritenceStrategy == InheritenceStrategy.TablePerHierachy)
+					session.Insert((BaseObject)bob);
+				else
+					session.Insert(bob);
+				#endif
+				#if NHIBERNATE
 				session.Insert(bob);
+				#endif
 			}
 
 			Console.WriteLine("  [OK]");
@@ -105,7 +114,7 @@ namespace PageOfBob.Comparison {
 				Hash = new Byte[] { 0, 1, 2, 3, 4, 5 },
 				Salt = new Byte[] { 6, 7, 8, 9, 10, 0xA }
 				#if ENTITY
-				,Things =new List<Thing>()
+				,Things = new HashSet<Thing>()
 				#endif
 			};
 			Thing camery;

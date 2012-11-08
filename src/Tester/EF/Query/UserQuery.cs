@@ -2,11 +2,25 @@
 using System.Linq;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace PageOfBob.Comparison.EF.Query {
 	public class UserQuery : Query<User, UserCriteria>, IUserQuery {
 		public UserQuery(UserCriteria criteria, EfContext context) : base(criteria, context) { }
 
+		protected override Expression<Func<User, bool>> GetQuery() {
+			var q = base.GetQuery();
+			
+			if (!string.IsNullOrEmpty(Criteria.Username)) {
+				q = q.And(x => x.Username == Criteria.Username);
+			}
+			
+			return q;
+		}
+		
 		public System.Collections.Generic.IList<FlatView> Flatten() {
 			
 			var query = GetQuery();

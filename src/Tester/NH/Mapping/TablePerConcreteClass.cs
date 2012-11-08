@@ -43,7 +43,7 @@ namespace PageOfBob.Comparison.NH.Mapping.TablePerConcreteClass {
 				.Not.Nullable();
 			Map(x => x.Modified)
 				.Nullable();
-			Map(x => x.Deleted)
+			Map(x => x.IsDeleted)
 				.Not.Nullable();
 		}
 	}

@@ -13,7 +13,7 @@ namespace PageOfBob.Comparison.NH.Mapping.TablePerType {
 				.Not.Nullable();
 			Map(x => x.Modified)
 				.Nullable();
-			Map(x => x.Deleted)
+			Map(x => x.IsDeleted)
 				.Not.Nullable();
 		}
 	}

@@ -24,8 +24,14 @@ namespace PageOfBob.Comparison {
 	
 	public static class DbFactory {
 		#if NHIBERNATE
-		public static ISessionFactory Factory = NH.SessionFactory.Get(NH.SessionFactory.InheritenceStrategy.TablePerConcreteClass);
+		public static ISessionFactory Factory = NH.SessionFactory.Get();
 		#endif
+		
+		public static InheritenceStrategy InheritenceStrategy { get; set; }
+		
+		static DbFactory() {
+			InheritenceStrategy = InheritenceStrategy.TablePerConcreteClass;
+		}
 		
 		public static IDbAbstraction GetDatabase() {
 			#if ENTITY

@@ -98,11 +98,10 @@
     <Compile Include="DbAbstraction.cs" />
     <Compile Include="EF\EfContext.cs" />
     <Compile Include="EF\EfDatabase.cs" />
-    <Compile Include="EF\Mapping\TablePerConcreteClass.cs" />
-    <Compile Include="EF\Mapping\TablePerHierarchy.cs" />
     <Compile Include="EF\Query\PredicateBuilder.cs" />
     <Compile Include="EF\Query\Query.cs" />
     <Compile Include="EF\Query\UserQuery.cs" />
+    <Compile Include="InheritenceStrategy.cs" />
     <Compile Include="NH\Mapping\TablePerConcreteClass.cs" />
     <Compile Include="NH\Mapping\TablePerHierarchy.cs" />
     <Compile Include="NH\Mapping\TablePerType.cs" />

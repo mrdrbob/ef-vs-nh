@@ -5,8 +5,6 @@ using System.Linq.Expressions;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-using PageOfBob.Comparison.EF.Mapping;
-
 namespace PageOfBob.Comparison.EF.Query {
 	public class Query <T, K> where T:BaseObject where K : Criteria {
 		public K Criteria { get; private set; }
@@ -17,23 +15,28 @@ namespace PageOfBob.Comparison.EF.Query {
 			Context = context;
 		}
 		
-		protected Expression<Func<T, bool>> GetQuery() {
+		protected virtual Expression<Func<T, bool>> GetQuery() {
 			var predicate = PredicateBuilder.True<T>();
 			
 			if (Criteria.ID.HasValue)
 				predicate = predicate.And(x => x.ID == Criteria.ID.Value);
 			
 			if (Criteria.Deleted.HasValue)
-				predicate = predicate.And(x => x.Deleted == Criteria.Deleted.Value);
+				predicate = predicate.And(x => x.IsDeleted == Criteria.Deleted.Value);
 			
 			return predicate;
+		}
+		
+		protected System.Data.Objects.ObjectSet<T> GetSet() {
+			var objContext = ((IObjectContextAdapter)Context).ObjectContext;
+			var dbSet = objContext.CreateObjectSet<T>();
+			return dbSet;
 		}
 		
 		protected IEnumerable<T> ToEnumerable() {
 			var q = GetQuery();
 			
-			var objContext = ((IObjectContextAdapter)Context).ObjectContext;
-			var dbSet = objContext.CreateObjectSet<T>();
+			var dbSet = GetSet();
 			var results = dbSet.Where(q);
 			
 			if (Criteria.Take.HasValue)
