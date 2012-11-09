@@ -18,4 +18,9 @@ namespace PageOfBob.Comparison {
 		public bool JoinEvents { get; set; }
 		public bool JoinWork { get; set; }
 	}
+	
+	public class ThingCriteria : Criteria {
+		public string Name { get; set; }
+		public UserCriteria MatchesUser { get; set; }
+	}
 }

@@ -22,5 +22,9 @@ namespace PageOfBob.Comparison.NH {
 		public IUserQuery GetUserQuery(UserCriteria criteria) {
 			return new Query.UserQuery(criteria, _session);
 		}
+		
+		public Query.ThingQuery GetThingQuery(ThingCriteria criteria) {
+			return new Query.ThingQuery(criteria, _session);
+		}
 	}
 }

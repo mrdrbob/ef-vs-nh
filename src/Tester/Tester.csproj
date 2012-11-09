@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="Criteria.cs" />
     <Compile Include="DbAbstraction.cs" />
+    <Compile Include="EF\EfBaseItemContext.cs" />
     <Compile Include="EF\EfContext.cs" />
     <Compile Include="EF\EfDatabase.cs" />
     <Compile Include="EF\Query\PredicateBuilder.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="NH\Mapping\TablePerType.cs" />
     <Compile Include="NH\NHibernateDatabase.cs" />
     <Compile Include="NH\Query\Query.cs" />
+    <Compile Include="NH\Query\ThingQuery.cs" />
     <Compile Include="NH\Query\UserQuery.cs" />
     <Compile Include="NH\SessionFactory.cs" />
     <Compile Include="POCO.cs" />

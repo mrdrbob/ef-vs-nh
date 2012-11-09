@@ -2,14 +2,11 @@
 using System.Linq;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 
 namespace PageOfBob.Comparison.EF.Query {
-	public class UserQuery : Query<User, UserCriteria>, IUserQuery {
-		public UserQuery(UserCriteria criteria, EfContext context) : base(criteria, context) { }
+	public class UserQuery<C> : Query<User, UserCriteria, C>, IUserQuery where C : DbContext {
+		public UserQuery(UserCriteria criteria, C context) : base(criteria, context) { }
 
 		protected override Expression<Func<User, bool>> GetQuery() {
 			var q = base.GetQuery();
@@ -19,6 +16,16 @@ namespace PageOfBob.Comparison.EF.Query {
 			}
 			
 			return q;
+		}
+		
+		protected override IQueryable<User> GetSet() {
+			if (DbFactory.InheritenceStrategy == InheritenceStrategy.TablePerConcreteClass) {
+				EfContext ctx = Context as EfContext;
+				return ctx.Users;
+			} else {
+				EfBaseItemContext ctx = Context as EfBaseItemContext;
+				return ctx.Objects.OfType<User>();
+			}
 		}
 		
 		public System.Collections.Generic.IList<FlatView> Flatten() {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NHibernate.Transform;
+using NHibernate.Criterion;
 
 namespace PageOfBob.Comparison.NH.Query {
 	public class UserQuery : Query<User, UserCriteria>, IUserQuery {
@@ -31,6 +32,11 @@ namespace PageOfBob.Comparison.NH.Query {
 				q = q.JoinAlias(() => _eventAlias.WorkDone, () => _workAlias);
 			}
 			return q;
+		}
+		
+		internal QueryOver<User, User> GetSubquery() {
+			return GetQuery()
+				.Select(Projections.Property(() => _alias.ID));
 		}
 
 		public IList<FlatView> Flatten() {

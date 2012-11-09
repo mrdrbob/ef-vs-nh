@@ -24,10 +24,10 @@ namespace PageOfBob.Comparison {
 	
 	public static class DbFactory {
 		#if NHIBERNATE
-		public static ISessionFactory Factory = NH.SessionFactory.Get();
+		public static ISessionFactory Factory;
 		#endif
 		
-		public static InheritenceStrategy InheritenceStrategy { get; set; }
+		public static InheritenceStrategy InheritenceStrategy;
 		
 		static DbFactory() {
 			InheritenceStrategy = InheritenceStrategy.TablePerConcreteClass;
@@ -35,7 +35,10 @@ namespace PageOfBob.Comparison {
 		
 		public static IDbAbstraction GetDatabase() {
 			#if ENTITY
-			return new EF.EfDatabase(new EF.EfContext());
+			if (DbFactory.InheritenceStrategy == InheritenceStrategy.TablePerConcreteClass)
+				return new EF.EfDatabase(new EF.EfContext());
+			else
+				return new EF.EfDatabase(new EF.EfBaseItemContext());
 			#endif
 			
 			#if NHIBERNATE

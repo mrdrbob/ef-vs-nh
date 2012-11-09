@@ -6,11 +6,11 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
 namespace PageOfBob.Comparison.EF.Query {
-	public class Query <T, K> where T:BaseObject where K : Criteria {
+	public abstract class Query <T, K, C> where T:BaseObject where K : Criteria where C : DbContext {
 		public K Criteria { get; private set; }
-		public EfContext Context { get; private set; }
+		public C Context { get; private set; }
 		
-		public Query(K criteria, EfContext context) {
+		public Query(K criteria, C context) {
 			Criteria = criteria;
 			Context = context;
 		}
@@ -27,11 +27,7 @@ namespace PageOfBob.Comparison.EF.Query {
 			return predicate;
 		}
 		
-		protected System.Data.Objects.ObjectSet<T> GetSet() {
-			var objContext = ((IObjectContextAdapter)Context).ObjectContext;
-			var dbSet = objContext.CreateObjectSet<T>();
-			return dbSet;
-		}
+		protected abstract IQueryable<T> GetSet();
 		
 		protected IEnumerable<T> ToEnumerable() {
 			var q = GetQuery();

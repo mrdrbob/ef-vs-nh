@@ -24,6 +24,15 @@ Ego:
 	* Couple years of ColdFusion, which I've been trying to scrub from my memory so please stop bringing it up.
 * Currently a developer at Blend Interactive, since Aug '12.
 * Long(ish) time NHibnerate user
+* Biased against LINQ as a SQL generator
+
+The Myth:
+
+* ORM = Ignore the DB!
+* Umbraco V5 - Used NHibernate through LAYERS of abstraction
+	* Allow the view to generate queries - NO! BAD DOG!
+	* (N + 1) problem - http://ayende.com/blog/156577/on-umbracorsquo-s-nhibernatersquo-s-pullout
+	* Forked to Rebel CMS http://www.rebelcms.com/
 
 The Project:
 
@@ -92,8 +101,8 @@ Performance Considerations:
 
 * SELECT * by default
 * In NH, using transactions can actually speed up requests.
-	* NH automatically adds transactions around queries
-* Batched queries (Future)
+	* NH automatically adds transactions around individual queries, if not in a transaction
+* Batched queries in NH (Future<T>)
 
 NHibernate DynamicUpdate:
 	

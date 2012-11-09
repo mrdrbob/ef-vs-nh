@@ -5,8 +5,8 @@ using System.Data.Entity.Infrastructure;
 
 namespace PageOfBob.Comparison.EF {
 	public class EfDatabase : IDbAbstraction {
-		private EfContext _context;
-		public EfDatabase(EfContext context) {
+		private DbContext _context;
+		public EfDatabase(DbContext context) {
 			_context = context;
 		}
 		
@@ -26,7 +26,10 @@ namespace PageOfBob.Comparison.EF {
 		}
 		
 		public IUserQuery GetUserQuery(UserCriteria criteria) {
-			return new Query.UserQuery(criteria, _context);
+			if (DbFactory.InheritenceStrategy == InheritenceStrategy.TablePerConcreteClass)
+				return new Query.UserQuery<EfContext>(criteria, (EfContext)_context);
+			else
+				return new Query.UserQuery<EfBaseItemContext>(criteria, (EfBaseItemContext)_context);
 		}
 		
 		public void Dispose() {

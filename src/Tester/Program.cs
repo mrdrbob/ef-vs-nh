@@ -22,7 +22,12 @@ namespace PageOfBob.Comparison {
 			}
 			Console.WriteLine("   [OK]");
 			
-			DbFactory.InheritenceStrategy = InheritenceStrategy.TablePerType;
+			DbFactory.InheritenceStrategy = InheritenceStrategy.TablePerConcreteClass;
+			#if NHIBERNATE
+			DbFactory.Factory = NH.SessionFactory.Get();
+			#endif
+			
+			Console.WriteLine("Using Strategy: {0}", DbFactory.InheritenceStrategy.ToString());
 			
 			#if NHIBERNATE
 			NH.SessionFactory.Locking = NH.SessionFactory.LockingStrategy.OptimisticVersionInteger;
@@ -36,10 +41,10 @@ namespace PageOfBob.Comparison {
 				User bob = CreateBob();
 
 				#if ENTITY
-				if (DbFactory.InheritenceStrategy == InheritenceStrategy.TablePerHierachy)
-					session.Insert((BaseObject)bob);
-				else
+				if (DbFactory.InheritenceStrategy == InheritenceStrategy.TablePerConcreteClass)
 					session.Insert(bob);
+				else
+					session.Insert((BaseObject)bob);
 				#endif
 				#if NHIBERNATE
 				session.Insert(bob);
@@ -48,6 +53,27 @@ namespace PageOfBob.Comparison {
 
 			Console.WriteLine("  [OK]");
 			Console.ReadKey();
+			
+			#if NHIBERNATE
+			Console.WriteLine("Combining Queries");
+			using(var session = DbFactory.GetDatabase()) {
+				var db = session as NH.NHibernateDatabase;
+				
+				var q = db.GetThingQuery(new ThingCriteria {
+					Name = "2012 Toyota Camery",
+					MatchesUser = new UserCriteria {
+						Username = "Bob"
+					}
+                });
+				
+				var things = q.ToList();
+				foreach (var thing in things) {
+					Console.WriteLine("{0}", thing.Name);
+				}
+			}
+			Console.WriteLine("  [OK]");
+			Console.ReadKey();
+			#endif
 
 			Guid theToyota;
 			using (var session = DbFactory.GetDatabase()) {

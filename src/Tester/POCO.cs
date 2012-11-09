@@ -13,10 +13,11 @@ namespace PageOfBob.Comparison {
 		protected BaseObject() {
 			Created = DateTime.Now;
 			
-			// In NH, you DON'T assign an idea, but let
+			// In NH, you DON'T assign an id, but let
 			// NH assign one for you.  NH expects this to be an 
 			// empty GUID, which is what NewGuid() will do in a 
-			// NH setting.
+			// NH setting.  EF, you are responsible for assigning
+			// a unique ID.
 			ID = DbFactory.NewGuid();
 		}
 	}
