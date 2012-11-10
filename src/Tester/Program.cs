@@ -24,13 +24,13 @@ namespace PageOfBob.Comparison {
 			
 			DbFactory.InheritenceStrategy = InheritenceStrategy.TablePerConcreteClass;
 			#if NHIBERNATE
+			NH.SessionFactory.Locking = NH.SessionFactory.LockingStrategy.OptimisticVersionTimestamp;
 			DbFactory.Factory = NH.SessionFactory.Get();
 			#endif
 			
 			Console.WriteLine("Using Strategy: {0}", DbFactory.InheritenceStrategy.ToString());
 			
 			#if NHIBERNATE
-			NH.SessionFactory.Locking = NH.SessionFactory.LockingStrategy.OptimisticVersionInteger;
 			Console.Write("ExportSchema");
 			NH.SessionFactory.ExportSchema(DbFactory.Factory);
 			Console.WriteLine("   [OK]");
@@ -54,6 +54,7 @@ namespace PageOfBob.Comparison {
 			Console.WriteLine("  [OK]");
 			Console.ReadKey();
 			
+			
 			#if NHIBERNATE
 			Console.WriteLine("Combining Queries");
 			using(var session = DbFactory.GetDatabase()) {
@@ -61,7 +62,7 @@ namespace PageOfBob.Comparison {
 				
 				var q = db.GetThingQuery(new ThingCriteria {
 					Name = "2012 Toyota Camery",
-					MatchesUser = new UserCriteria {
+					BelongsTo = new UserCriteria {
 						Username = "Bob"
 					}
                 });
@@ -118,11 +119,11 @@ namespace PageOfBob.Comparison {
 				Console.WriteLine("  [OK]");
 				Console.ReadKey();
 			}
-
+			
+			
 			using (var session = DbFactory.GetDatabase()) {
 				var toyota = session.Get<Thing>(theToyota);
 				toyota.Name = "2012 Toyota Camery";
-				toyota.Modified = DateTime.Now;
 				
 				Console.WriteLine("Update some work");
 				session.FlushChanges();

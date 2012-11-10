@@ -13,8 +13,8 @@ namespace PageOfBob.Comparison.NH.Query {
 			if (!string.IsNullOrEmpty(Criteria.Name))
 				q.And(() => _alias.Name == Criteria.Name);
 			
-			if (Criteria.MatchesUser != null) {
-				var uq = new UserQuery(Criteria.MatchesUser, Session)
+			if (Criteria.BelongsTo != null) {
+				var uq = new UserQuery(Criteria.BelongsTo, Session)
 					.GetSubquery();
 				
 				q = q.WithSubquery

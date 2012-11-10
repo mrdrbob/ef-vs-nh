@@ -21,6 +21,6 @@ namespace PageOfBob.Comparison {
 	
 	public class ThingCriteria : Criteria {
 		public string Name { get; set; }
-		public UserCriteria MatchesUser { get; set; }
+		public UserCriteria BelongsTo { get; set; }
 	}
 }
